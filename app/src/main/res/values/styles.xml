@@ -8,4 +8,9 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <declare-styleable name="twitterListView">
+        <attr name="textColor" format="color" />
+        <attr name="backgroundColor" format="color" />
+    </declare-styleable>
+
 </resources>

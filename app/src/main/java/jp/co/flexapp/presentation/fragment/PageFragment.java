@@ -10,14 +10,6 @@ import android.view.ViewGroup;
 
 import jp.co.flexapp.R;
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link PageFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link PageFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class PageFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
