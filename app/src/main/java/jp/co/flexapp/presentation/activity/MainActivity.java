@@ -1,7 +1,9 @@
-package com.example.mitsuhori_y.flexapp;
+package jp.co.flexapp.presentation.activity;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+
+import jp.co.flexapp.R;
 
 public class MainActivity extends AppCompatActivity {
 
