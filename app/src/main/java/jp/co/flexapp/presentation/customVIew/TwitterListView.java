@@ -21,7 +21,6 @@ public class TwitterListView extends LinearLayout {
 
     public TwitterListView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
-        ViewGroup container =
         View view = LayoutInflater.from(context).inflate(R.layout.twitter_list_component, this);
     }
 
