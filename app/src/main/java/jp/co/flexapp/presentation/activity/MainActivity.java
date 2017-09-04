@@ -9,17 +9,18 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 
 import jp.co.flexapp.R;
-import jp.co.flexapp.presentation.fragment.PageFragment;
+import jp.co.flexapp.presentation.fragment.FbPageFragment;
+import jp.co.flexapp.presentation.fragment.InstaPageFragment;
+import jp.co.flexapp.presentation.fragment.TwitterPageFragment;
 
 public class MainActivity extends AppCompatActivity implements ViewPager.OnPageChangeListener,
-        PageFragment.OnFragmentInteractionListener {
+        TwitterPageFragment.OnFragmentInteractionListener, InstaPageFragment.OnFragmentInteractionListener, FbPageFragment.OnFragmentInteractionListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-//        Toolbar toolbar = (Toolbar) findViewById(R.id);
-//        setSupportActionBar(toolbar);
+        //  ListView listView = (ListView) findViewById(R.id.listView);
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
@@ -39,9 +40,28 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
 
             @Override
             public Fragment getItem(int position) {
-                return PageFragment.newInstance("", null);
+                Fragment resFragment = null;
+                switch (position) {
+                    case 0:
+                        resFragment = TwitterPageFragment.newInstance("", null);
+                        break;
+                    case 1:
+                        resFragment = FbPageFragment.newInstance("", null);
+                        break;
+                    case 2:
+                        resFragment = InstaPageFragment.newInstance("", null);
+                        break;
+                    default:
+                        resFragment = TwitterPageFragment.newInstance("", null);
+                }
+                return resFragment;
             }
         };
+
+//        ArrayList<Tweet> list = new ArrayList<>();
+//        Tweet tweet = new Tweet(1, R.drawable.sample_thumb, "hoge", "hogehogehoge");
+//        list.add(tweet);
+//        adapter.notifyDataSetChanged();
 
         viewPager.setAdapter(adapter);
         viewPager.addOnPageChangeListener(this);

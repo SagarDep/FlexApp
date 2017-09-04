@@ -3,6 +3,19 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="jp.co.flexapp.presentation.fragment.PageFragment">
+    tools:context="jp.co.flexapp.presentation.fragment.TwitterPageFragment"
+    tools:showIn="@layout/activity_main">
+
+    <!--ListView
+        android:id="@+id/listView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"></ListView-->
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:text="Twitter" />
 
 </LinearLayout>
