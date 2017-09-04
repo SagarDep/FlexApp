@@ -9,18 +9,19 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 
 import jp.co.flexapp.R;
+import jp.co.flexapp.presentation.fragment.BasePageFragment;
 import jp.co.flexapp.presentation.fragment.FbPageFragment;
 import jp.co.flexapp.presentation.fragment.InstaPageFragment;
 import jp.co.flexapp.presentation.fragment.TwitterPageFragment;
 
 public class MainActivity extends AppCompatActivity implements ViewPager.OnPageChangeListener,
-        TwitterPageFragment.OnFragmentInteractionListener, InstaPageFragment.OnFragmentInteractionListener, FbPageFragment.OnFragmentInteractionListener {
+        TwitterPageFragment.OnFragmentInteractionListener, InstaPageFragment.OnFragmentInteractionListener,
+        FbPageFragment.OnFragmentInteractionListener, BasePageFragment.OnFragmentInteractionListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        //  ListView listView = (ListView) findViewById(R.id.listView);
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         ViewPager viewPager = (ViewPager) findViewById(R.id.pager);

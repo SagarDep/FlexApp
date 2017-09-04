@@ -7,8 +7,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.ListView;
+
+import java.util.ArrayList;
 
 import jp.co.flexapp.R;
+import jp.co.flexapp.infla.Tweet;
+import jp.co.flexapp.presentation.customVIew.TweetListAdapter;
 
 public class TwitterPageFragment extends BasePageFragment {
     // TODO: Rename parameter arguments, choose names that match
@@ -57,8 +62,25 @@ public class TwitterPageFragment extends BasePageFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_page, container, false);
-//        View view = new TwitterListView(this.getContext(), null);
+        View view = inflater.inflate(R.layout.fragment_twitter_page, container, false);
+
+        ListView listView = (ListView) view.findViewById(R.id.twitter_list_view);
+
+        ArrayList<Tweet> list = new ArrayList<>();
+        TweetListAdapter adapter = new TweetListAdapter(getActivity());
+        adapter.setTweetList(list);
+        listView.setAdapter(adapter);
+
+        for (int i = 0; i < 10; i++) {
+            Tweet tweet = new Tweet();
+            tweet.setId(1);
+            tweet.setTweet("宇宙の彼方へサー行くぞ！");
+            tweet.setThumbNailId(R.drawable.sample_thumb);
+            tweet.setUsername("Mr,PotatoHead");
+            list.add(tweet);
+        }
+        adapter.notifyDataSetChanged();
+
         LinearLayout layout = new LinearLayout(this.getContext());
         layout.addView(view);
         return layout;
