@@ -1,4 +1,4 @@
-package jp.co.flexapp.infla;
+package jp.co.flexapp.infla.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

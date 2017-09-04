@@ -10,7 +10,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 import jp.co.flexapp.R;
-import jp.co.flexapp.infla.Tweet;
+import jp.co.flexapp.infla.entity.Tweet;
 import lombok.Setter;
 
 /**

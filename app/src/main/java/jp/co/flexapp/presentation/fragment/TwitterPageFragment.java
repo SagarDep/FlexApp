@@ -12,7 +12,7 @@ import android.widget.ListView;
 import java.util.ArrayList;
 
 import jp.co.flexapp.R;
-import jp.co.flexapp.infla.Tweet;
+import jp.co.flexapp.infla.entity.Tweet;
 import jp.co.flexapp.presentation.customVIew.TweetListAdapter;
 
 public class TwitterPageFragment extends BasePageFragment {
