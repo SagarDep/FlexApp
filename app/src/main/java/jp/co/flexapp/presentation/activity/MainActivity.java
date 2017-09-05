@@ -59,11 +59,6 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
             }
         };
 
-//        ArrayList<Tweet> list = new ArrayList<>();
-//        Tweet tweet = new Tweet(1, R.drawable.sample_thumb, "hoge", "hogehogehoge");
-//        list.add(tweet);
-//        adapter.notifyDataSetChanged();
-
         viewPager.setAdapter(adapter);
         viewPager.addOnPageChangeListener(this);
 
