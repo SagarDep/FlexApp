@@ -1,5 +1,6 @@
 package jp.co.flexapp.presentation.activity;
 
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
@@ -9,6 +10,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 
 import jp.co.flexapp.R;
+import jp.co.flexapp.common.util.TwitterUtils;
 import jp.co.flexapp.presentation.fragment.BasePageFragment;
 import jp.co.flexapp.presentation.fragment.FbPageFragment;
 import jp.co.flexapp.presentation.fragment.InstaPageFragment;
@@ -63,6 +65,12 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
         viewPager.addOnPageChangeListener(this);
 
         tabLayout.setupWithViewPager(viewPager);
+
+        if (!TwitterUtils.hasAccessToken(this)) {
+            Intent intent = new Intent(getApplication(), TwitterOAuthActivity.class);
+            startActivity(intent);
+            finish();
+        }
     }
 
     @Override

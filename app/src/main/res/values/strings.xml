@@ -6,4 +6,5 @@
 
     <string name="twitter_consumer_key">cn4Rafl8pj03P7SQCnlEYXktY</string>
     <string name="twitter_consumer_secret">38SGyrGg85Fbxlmg3IunAqA3Wj0MfhVBIvYBfEsFx7UCCym7Fi</string>
+    <string name="twitter_callback_url">flex://twitter</string>
 </resources>
