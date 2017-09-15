@@ -50,7 +50,6 @@ public class TwitterOAuthActivity extends AppCompatActivity {
 
                     @Override
                     public void onNext(String url) {
-                        Log.i("twitter_token", url);
                         if (!url.isEmpty()) {
                             Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
                             startActivity(intent);
