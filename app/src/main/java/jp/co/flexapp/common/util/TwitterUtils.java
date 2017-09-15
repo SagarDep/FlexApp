@@ -26,7 +26,7 @@ public class TwitterUtils {
         twitter.setOAuthConsumer(consumerKey, consumerSecret);
 
         if (hasAccessToken(context)) {
-
+            twitter.setOAuthAccessToken(loadAccessToken(context));
         }
         return twitter;
     }

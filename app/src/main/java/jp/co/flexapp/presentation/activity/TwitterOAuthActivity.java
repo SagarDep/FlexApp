@@ -8,10 +8,10 @@ import android.util.Log;
 import android.widget.Toast;
 
 import io.reactivex.Observable;
-import io.reactivex.ObservableEmitter;
-import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.Observer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 import jp.co.flexapp.R;
 import jp.co.flexapp.common.util.TwitterUtils;
 import twitter4j.Twitter;
@@ -38,34 +38,37 @@ public class TwitterOAuthActivity extends AppCompatActivity {
 
         twitter = TwitterUtils.getTwitterInstance(this);
 
-        getTwitterRequestTokenObservable().subscribe(new Observer<String>() {
+        getTwitterRequestTokenObservable()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<String>() {
 
-            @Override
-            public void onSubscribe(Disposable disposable) {
+                    @Override
+                    public void onSubscribe(Disposable disposable) {
 
-            }
+                    }
 
-            @Override
-            public void onNext(String url) {
-                Log.i("twitter_token", url);
-                if (url.isEmpty()) {
-                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-                    startActivity(intent);
-                } else {
-                    Log.e("twitter", "tokenの取得に失敗しました");
-                }
-            }
+                    @Override
+                    public void onNext(String url) {
+                        Log.i("twitter_token", url);
+                        if (!url.isEmpty()) {
+                            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+                            startActivity(intent);
+                        } else {
+                            Log.e("twitter", "tokenの取得に失敗しました");
+                        }
+                    }
 
-            @Override
-            public void onError(Throwable throwable) {
-                throwable.printStackTrace();
-            }
+                    @Override
+                    public void onError(Throwable throwable) {
+                        throwable.printStackTrace();
+                    }
 
-            @Override
-            public void onComplete() {
+                    @Override
+                    public void onComplete() {
 
-            }
-        });
+                    }
+                });
     }
 
     @Override
@@ -76,33 +79,36 @@ public class TwitterOAuthActivity extends AppCompatActivity {
 
         //URLによって実行されたアプリから引数を取得する
         String verifier = intent.getData().getQueryParameter(OAUTH_VERIFIER);
-        getTwitterAccessTokenObservable(verifier).subscribe(new Observer<AccessToken>() {
+        getTwitterAccessTokenObservable(verifier)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeWith(new Observer<AccessToken>() {
 
-            @Override
-            public void onSubscribe(Disposable disposable) {
+                    @Override
+                    public void onSubscribe(Disposable disposable) {
 
-            }
+                    }
 
-            @Override
-            public void onNext(AccessToken accessToken) {
-                if (accessToken != null) {
-                    showToast("認証成功！");
-                    successOAuth(accessToken);
-                } else {
-                    showToast("認証失敗...");
-                }
-            }
+                    @Override
+                    public void onNext(AccessToken accessToken) {
+                        if (accessToken != null) {
+                            showToast("認証成功！");
+                            successOAuth(accessToken);
+                        } else {
+                            showToast("認証失敗...");
+                        }
+                    }
 
-            @Override
-            public void onError(Throwable throwable) {
-                throwable.printStackTrace();
-            }
+                    @Override
+                    public void onError(Throwable throwable) {
+                        throwable.printStackTrace();
+                    }
 
-            @Override
-            public void onComplete() {
+                    @Override
+                    public void onComplete() {
 
-            }
-        });
+                    }
+                });
     }
 
     private void successOAuth(AccessToken accessToken) {
@@ -118,24 +124,16 @@ public class TwitterOAuthActivity extends AppCompatActivity {
 
     private Observable<String> getTwitterRequestTokenObservable() {
         return Observable.create(
-                new ObservableOnSubscribe<String>() {
-                    @Override
-                    public void subscribe(ObservableEmitter<String> e) throws Exception {
-                        requestToken = twitter.getOAuthRequestToken(callBackURL);
-                        e.onNext(requestToken.getAuthorizationURL());
-                    }
+                e -> {
+                    requestToken = twitter.getOAuthRequestToken(callBackURL);
+                    e.onNext(requestToken.getAuthorizationURL());
                 }
         );
     }
 
     private Observable<AccessToken> getTwitterAccessTokenObservable(String... verifier) {
         return Observable.create(
-                new ObservableOnSubscribe<AccessToken>() {
-                    @Override
-                    public void subscribe(ObservableEmitter<AccessToken> e) throws Exception {
-                        e.onNext(twitter.getOAuthAccessToken(requestToken, verifier[0]));
-                    }
-                }
+                e -> e.onNext(twitter.getOAuthAccessToken(requestToken, verifier[0]))
         );
     }
 
