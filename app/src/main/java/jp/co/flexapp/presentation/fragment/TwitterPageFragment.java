@@ -23,6 +23,7 @@ import jp.co.flexapp.infla.entity.Tweet;
 import jp.co.flexapp.presentation.customVIew.TweetListAdapter;
 import twitter4j.Query;
 import twitter4j.QueryResult;
+import twitter4j.ResponseList;
 import twitter4j.Status;
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
@@ -73,19 +74,19 @@ public class TwitterPageFragment extends BasePageFragment {
 //        query.setResultType(query.MIXED);
 //        query.setCount(50);
 
-        getSearchResultObservable(query)
+        getTimelineObservable()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<QueryResult>() {
+                .subscribe(new Observer<ResponseList<Status>>() {
                     @Override
                     public void onSubscribe(Disposable disposable) {
 
                     }
 
                     @Override
-                    public void onNext(QueryResult queryResult) {
+                    public void onNext(ResponseList<Status> resList) {
                         ArrayList<Tweet> list = new ArrayList<>();
-                        for (Status tweetResult : queryResult.getTweets()) {
+                        for (Status tweetResult : resList) {
                             // Log.i("Tweet", tweet.getCreatedAt() + ":" + tweet.getUser().getName() + ":" + tweet.getText());
                             Tweet tweet = new Tweet();
                             tweet.setId(tweetResult.getFavoriteCount());
@@ -122,6 +123,17 @@ public class TwitterPageFragment extends BasePageFragment {
             try {
                 QueryResult queryResult = twitter.search(query);
                 e.onNext(queryResult);
+            } catch (TwitterException error) {
+                e.onError(error);
+            }
+        });
+    }
+
+    private Observable<ResponseList<Status>> getTimelineObservable() {
+        return Observable.create(e -> {
+            try {
+                ResponseList<Status> resList = twitter.getHomeTimeline();
+                e.onNext(resList);
             } catch (TwitterException error) {
                 e.onError(error);
             }
