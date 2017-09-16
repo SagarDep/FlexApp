@@ -3,6 +3,7 @@ package jp.co.flexapp.presentation.fragment;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,79 +12,120 @@ import android.widget.ListView;
 
 import java.util.ArrayList;
 
+import io.reactivex.Observable;
+import io.reactivex.Observer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 import jp.co.flexapp.R;
+import jp.co.flexapp.common.util.TwitterUtils;
 import jp.co.flexapp.infla.entity.Tweet;
 import jp.co.flexapp.presentation.customVIew.TweetListAdapter;
+import twitter4j.Query;
+import twitter4j.QueryResult;
+import twitter4j.Status;
+import twitter4j.Twitter;
+import twitter4j.TwitterException;
+import twitter4j.TwitterFactory;
+import twitter4j.auth.AccessToken;
+import twitter4j.conf.ConfigurationBuilder;
 
 public class TwitterPageFragment extends BasePageFragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
 
     private OnFragmentInteractionListener mListener;
+    private Twitter twitter;
+    private TweetListAdapter adapter;
 
     public TwitterPageFragment() {
-        // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment TwitterPageFragment.
-     */
-    // TODO: Rename and change types and number of parameters
     public static TwitterPageFragment newInstance(String param1, String param2) {
         TwitterPageFragment fragment = new TwitterPageFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
         return fragment;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
+        AccessToken accessToken = TwitterUtils.loadAccessToken(getContext());
+        ConfigurationBuilder cb = new ConfigurationBuilder();
+        cb.setDebugEnabled(true)
+                .setOAuthConsumerKey(getString(R.string.twitter_consumer_key))
+                .setOAuthConsumerSecret(getString(R.string.twitter_consumer_secret))
+                .setOAuthAccessToken(accessToken.getToken())
+                .setOAuthAccessTokenSecret(accessToken.getTokenSecret());
+        twitter = new TwitterFactory(cb.build()).getInstance();
+        adapter = new TweetListAdapter(getActivity());
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_twitter_page, container, false);
 
         ListView listView = (ListView) view.findViewById(R.id.twitter_list_view);
 
-        ArrayList<Tweet> list = new ArrayList<>();
-        TweetListAdapter adapter = new TweetListAdapter(getActivity());
-        adapter.setTweetList(list);
-        listView.setAdapter(adapter);
+        Query query = new Query("hoge");
+        query.setCount(50);
+//        query.setQuery("watching now");
+//        query.setSince("2016-10-01");
+//        query.setUntil("2017-09-02");
+//        query.setResultType(query.MIXED);
+//        query.setCount(50);
 
-        for (int i = 0; i < 10; i++) {
-            Tweet tweet = new Tweet();
-            tweet.setId(1);
-            tweet.setTweet("宇宙の彼方へサー行くぞ！");
-            tweet.setThumbNailId(R.drawable.sample_thumb);
-            tweet.setUsername("Mr,PotatoHead");
-            list.add(tweet);
-        }
-        adapter.notifyDataSetChanged();
+        getSearchResultObservable(query)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<QueryResult>() {
+                    @Override
+                    public void onSubscribe(Disposable disposable) {
+
+                    }
+
+                    @Override
+                    public void onNext(QueryResult queryResult) {
+                        ArrayList<Tweet> list = new ArrayList<>();
+                        for (Status tweetResult : queryResult.getTweets()) {
+                            // Log.i("Tweet", tweet.getCreatedAt() + ":" + tweet.getUser().getName() + ":" + tweet.getText());
+                            Tweet tweet = new Tweet();
+                            tweet.setId(tweetResult.getFavoriteCount());
+                            tweet.setTweet(tweetResult.getText());
+                            tweet.setThumbNailId(R.drawable.sample_thumb);
+                            tweet.setUsername(tweetResult.getUser().getName());
+                            list.add(tweet);
+                        }
+                        adapter.setTweetList(list);
+                        adapter.notifyDataSetChanged();
+                    }
+
+                    @Override
+                    public void onError(Throwable throwable) {
+                        Log.e("Tweet", throwable.getMessage());
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
+
+        adapter.setTweetList(new ArrayList<Tweet>());
+        listView.setAdapter(adapter);
 
         LinearLayout layout = new LinearLayout(this.getContext());
         layout.addView(view);
         return layout;
+    }
+
+    private Observable<QueryResult> getSearchResultObservable(Query query) {
+        return Observable.create(e -> {
+            try {
+                QueryResult queryResult = twitter.search(query);
+                e.onNext(queryResult);
+            } catch (TwitterException error) {
+                e.onError(error);
+            }
+        });
     }
 
     // TODO: Rename method, update argument and hook method into UI event
