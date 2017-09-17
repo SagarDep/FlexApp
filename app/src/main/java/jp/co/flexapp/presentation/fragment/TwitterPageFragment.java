@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -30,6 +31,7 @@ import jp.co.flexapp.common.util.DateUtils;
 import jp.co.flexapp.common.util.TwitterUtils;
 import jp.co.flexapp.infla.entity.Tweet;
 import jp.co.flexapp.presentation.customVIew.TweetListAdapter;
+import twitter4j.Paging;
 import twitter4j.Query;
 import twitter4j.QueryResult;
 import twitter4j.ResponseList;
@@ -39,6 +41,8 @@ import twitter4j.TwitterException;
 import twitter4j.TwitterFactory;
 import twitter4j.auth.AccessToken;
 import twitter4j.conf.ConfigurationBuilder;
+
+import static android.view.View.GONE;
 
 public class TwitterPageFragment extends BasePageFragment {
 
@@ -73,7 +77,10 @@ public class TwitterPageFragment extends BasePageFragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_twitter_page, container, false);
 
+        ProgressBar progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
+        progressBar.setVisibility(View.VISIBLE);
         ListView listView = (ListView) view.findViewById(R.id.twitter_list_view);
+        listView.setVisibility(GONE);
 
         adapter.setTweetList(new ArrayList<Tweet>());
         listView.setAdapter(adapter);
@@ -103,6 +110,9 @@ public class TwitterPageFragment extends BasePageFragment {
                         userImageload(resList);
                         adapter.setTweetList(list);
                         adapter.notifyDataSetChanged();
+
+                        listView.setVisibility(View.VISIBLE);
+                        progressBar.setVisibility(GONE);
                     }
 
                     @Override
@@ -188,7 +198,7 @@ public class TwitterPageFragment extends BasePageFragment {
     private Observable<ResponseList<Status>> getTimelineObservable() {
         return Observable.create(e -> {
             try {
-                ResponseList<Status> resList = twitter.getHomeTimeline();
+                ResponseList<Status> resList = twitter.getHomeTimeline(new Paging(1, 30));
                 e.onNext(resList);
             } catch (TwitterException error) {
                 e.onError(error);
