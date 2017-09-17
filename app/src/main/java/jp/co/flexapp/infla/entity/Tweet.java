@@ -1,5 +1,7 @@
 package jp.co.flexapp.infla.entity;
 
+import android.graphics.Bitmap;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,7 +16,8 @@ import lombok.Setter;
 @Setter
 public class Tweet {
     int id;
-    int thumbNailId;
+    Bitmap userImage;
     String username;
     String tweet;
+    String createdAt;
 }

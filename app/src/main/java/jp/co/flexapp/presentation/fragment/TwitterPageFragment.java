@@ -1,6 +1,8 @@
 package jp.co.flexapp.presentation.fragment;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -10,14 +12,21 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 
 import io.reactivex.Observable;
+import io.reactivex.ObservableEmitter;
+import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 import jp.co.flexapp.R;
+import jp.co.flexapp.common.util.DateUtils;
 import jp.co.flexapp.common.util.TwitterUtils;
 import jp.co.flexapp.infla.entity.Tweet;
 import jp.co.flexapp.presentation.customVIew.TweetListAdapter;
@@ -66,13 +75,8 @@ public class TwitterPageFragment extends BasePageFragment {
 
         ListView listView = (ListView) view.findViewById(R.id.twitter_list_view);
 
-        Query query = new Query("hoge");
-        query.setCount(50);
-//        query.setQuery("watching now");
-//        query.setSince("2016-10-01");
-//        query.setUntil("2017-09-02");
-//        query.setResultType(query.MIXED);
-//        query.setCount(50);
+        adapter.setTweetList(new ArrayList<Tweet>());
+        listView.setAdapter(adapter);
 
         getTimelineObservable()
                 .subscribeOn(Schedulers.io())
@@ -87,14 +91,16 @@ public class TwitterPageFragment extends BasePageFragment {
                     public void onNext(ResponseList<Status> resList) {
                         ArrayList<Tweet> list = new ArrayList<>();
                         for (Status tweetResult : resList) {
-                            // Log.i("Tweet", tweet.getCreatedAt() + ":" + tweet.getUser().getName() + ":" + tweet.getText());
+//                            Log.i("Tweet", tweetResult.getCreatedAt() + ":" + tweetResult.getUser().getName() + ":" + tweetResult.getText());
                             Tweet tweet = new Tweet();
-                            tweet.setId(tweetResult.getFavoriteCount());
+                            tweet.setId((int) tweetResult.getId());
                             tweet.setTweet(tweetResult.getText());
-                            tweet.setThumbNailId(R.drawable.sample_thumb);
+                            tweet.setUserImage(BitmapFactory.decodeResource(getResources(), R.drawable.sample_thumb));
                             tweet.setUsername(tweetResult.getUser().getName());
+                            tweet.setCreatedAt(DateUtils.convert2String(tweetResult.getCreatedAt()));
                             list.add(tweet);
                         }
+                        userImageload(resList);
                         adapter.setTweetList(list);
                         adapter.notifyDataSetChanged();
                     }
@@ -110,12 +116,62 @@ public class TwitterPageFragment extends BasePageFragment {
                     }
                 });
 
-        adapter.setTweetList(new ArrayList<Tweet>());
-        listView.setAdapter(adapter);
-
         LinearLayout layout = new LinearLayout(this.getContext());
         layout.addView(view);
         return layout;
+    }
+
+    private void userImageload(ResponseList<Status> resList) {
+        getUserImageBmpObservable(resList)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<Bitmap>() {
+                    @Override
+                    public void onSubscribe(Disposable disposable) {
+
+                    }
+
+                    @Override
+                    public void onNext(Bitmap bitmap) {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable throwable) {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        adapter.notifyDataSetChanged();
+                    }
+                });
+
+    }
+
+    private Observable<Bitmap> getUserImageBmpObservable(ResponseList<Status> resList) {
+        return Observable.create(new ObservableOnSubscribe<Bitmap>() {
+            @Override
+            public void subscribe(ObservableEmitter<Bitmap> e) throws Exception {
+                Bitmap image;
+                try {
+                    int i = 0;
+                    for (Status tweet : resList) {
+                        String url = tweet.getUser().getProfileImageURL();
+                        URL imageUrl = new URL(url);
+                        InputStream imageIs = imageUrl.openStream();
+                        image = BitmapFactory.decodeStream(imageIs);
+                        adapter.setImageOfList(i, image);
+                        i++;
+                    }
+                    e.onComplete();
+                } catch (MalformedURLException err) {
+                    e.onError(err);
+                } catch (IOException err) {
+                    e.onError(err);
+                }
+            }
+        });
     }
 
     private Observable<QueryResult> getSearchResultObservable(Query query) {
@@ -179,3 +235,4 @@ public class TwitterPageFragment extends BasePageFragment {
         void onFragmentInteraction(Uri uri);
     }
 }
+
