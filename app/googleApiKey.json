@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "api-6102517632901736302-895436",
+  "private_key_id": "e25f6c25fc602018926eaecc9f3a26ce3b11581f",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQDpGCCjo0d5HSvO\natNm9Bo89UOX0r8Qg5lhy0GlwwcvyxxE6MIfT6K70IaSNVFWGNR8aDQPYggl5SAR\nbwFcRxBFEbQhsjPPOMK3ZAwZTbDZbL0ugblNw5lAHva0D9O4GnxWhkC6xgIbeSH0\n8JNnHkyAG8lvSxaliLdMKtPXeBiR4SBKiMOL/8t6gQvSXNOB2S8+1IefaFFslwF1\n527kszUQAWxf2TKAf8g3xI3i6xD8VJOvYEPq+J4JchBzvnDmRuZsd7s6YaTRqKMW\nxHionF2CQAOcY/PgV4vwWUgu9a606CTYVHYiipoih/CjrJCO1AAyHImRkVY0lUKp\nWHI0sqUxAgMBAAECggEAcCncCuIXEoCnA70D3Ra5SXv7+qK+rgOlWxmjjVA7tRPX\nlpEqWEbJ1/aPyus9KGDqXrMF2iEiKpoGxFzWGsFXYuUR+OT3aU+24uiRqdtorjdV\nEXv63yCwLdq4fAzhpEWab0hK/ZUqjm3LmUHqrEQ4K60zUQqg6ybOjShOp/ByYj83\nUUFocGstl78IPJm/dEyiNH7Yh3FnwX0ybUDSOa5dJpnE7MVitPBdowfSy9RN/zRo\nVXurs08FYutwXP4CUebuRPdBsOli+7p8xWCbPSdTe2KmDpNXgssKQ7kGEG1IbqrR\nNqTAWxmWtFMdW8pakVEQ27GUrIdkf3XiH1P6bMs+wQKBgQD6MMEl8QptNxRtSAIc\nPpohyIKgP9oYwaXBeekJGJG/uCs86KDfROfdAnUZJSyFzT0y42ZbjCWZBoIUC82j\n47D18MEPysM1fKNfwJ5S4aks6JNuuY/gL5lEhp8zJZzAI4yUayc3H5Me3tzVCCAj\nhlWTPBAWNWnYGTSN5qT6MRl7PwKBgQDugb7Vszef9elOspohheh/XFWxz28vjWst\nt0JUson1f2UX51sCGg8AOMXcv4FJ9DwS6pidkN9JtDixp5i+2oGtG2zXh6/wAUQv\n/ClCf+IKQ0CByIQE9rrLxi1Wz4Wrc3VIMxILMHmcJElsA6cAGKKD+g4i2QEJ74XX\nAeeaTAbzjwKBgEi7W6sYA5v0Yy/RuytS16PykmbbqR+BTBqOwjwutFAzzf4K8pl1\ngqIxULFaqTLMk3nzuZHrkBKIXdBODh4S1yLoNnfMzisCbMwtRtl5WKEBi7qonzbh\nH4FYUXeg+4yvyPJspB3WRAK5byFPF2i8aKxAzbxnEroLucd2wYcqNuopAoGBAOd9\nhLSz6uRV8OmSTikFaIDdJMudMyRrVUCc40ODuoVN7dgClIF4u2CSufCk6x7Vb81I\nZ3JfX2mRA4niyk1LlZtnx/91Uh1XjVAppf5GUyV02tJcxU5wDyOjKPReHTYorQez\nkerMVOxpB95PuTJNtsbz1+6YwvpawYPK9Hj9G64fAoGAQRyBBXMKIKbXvOzXiREt\n9TLaiQ442tqrCkQZ8RjYGqgqK1xRblIS1kT9dTa2oqZ+5HI4BAV4pXOqHifaSuav\n5T88iEFTJjj/U0eiMaxG5aadzEJmp6wCFkBOnDgQ9iUQPAeWoUo1amZsvaz0vEws\nXb+G77sfWxFtAVudCEhK4L0=\n-----END PRIVATE KEY-----\n",
+  "client_email": "lnln-app-android-deploy-test@api-6102517632901736302-895436.iam.gserviceaccount.com",
+  "client_id": "101119575645821093527",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://accounts.google.com/o/oauth2/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/lnln-app-android-deploy-test%40api-6102517632901736302-895436.iam.gserviceaccount.com"
+}

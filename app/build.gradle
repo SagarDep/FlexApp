@@ -1,13 +1,14 @@
 apply plugin: 'com.android.application'
 apply plugin: 'me.tatarka.retrolambda'
+apply plugin: 'com.github.triplet.play'
 
 android {
     signingConfigs {
-        config {
-            keyAlias 'flexKey'
-            keyPassword 'U6xBZawP'
-            storeFile file('/Users/mitsuhori_y/FlexApp/keystore/release_keystore.jks')
-            storePassword 'U6xBZawP'
+        releaseKey {
+            keyAlias 'releaseKeyAlias'
+            keyPassword 'hogehoge'
+            storeFile file('/Users/mitsuhori_y/AndroidStudioProjects/FlexApp/keystore/release_keystore.jks')
+            storePassword 'hogehoge'
         }
     }
     compileSdkVersion 25
@@ -24,13 +25,18 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            signingConfig signingConfigs.config
+            signingConfig signingConfigs.releaseKey
         }
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+}
+
+play {
+    track = 'production'
+    jsonFile = file('googleApiKey.json')
 }
 
 dependencies {
