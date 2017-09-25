@@ -4,16 +4,26 @@ import android.content.Context;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.facebook.AccessTokenTracker;
 import com.facebook.CallbackManager;
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
 import com.facebook.FacebookSdk;
+import com.facebook.GraphRequest;
+import com.facebook.GraphResponse;
 import com.facebook.ProfileTracker;
+import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.net.MalformedURLException;
 import java.net.URL;
 
 import jp.co.flexapp.R;
@@ -53,6 +63,8 @@ public class FbPageFragment extends BasePageFragment {
         callbackManager = CallbackManager.Factory.create();
         loginButton = (LoginButton) view.findViewById(R.id.fb_login_button);
         loginButtonInitialize();
+        loginButton.setReadPermissions("email", "user_birthday", "user_posts");
+        loginButton.registerCallback(callbackManager, callback);
         return view;
     }
 
@@ -62,6 +74,56 @@ public class FbPageFragment extends BasePageFragment {
         loginButton.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null);
         loginButton.setCompoundDrawablePadding(0);
     }
+
+    FacebookCallback<LoginResult> callback = new FacebookCallback<LoginResult>() {
+        @Override
+        public void onSuccess(LoginResult loginResult) {
+            GraphRequest request = GraphRequest.newMeRequest(loginResult.getAccessToken(), new GraphRequest.GraphJSONObjectCallback() {
+
+                @Override
+                public void onCompleted(JSONObject object, GraphResponse response) {
+                    Log.e("FB", object.toString());
+                    Log.e("FB", response.toString());
+
+                    try {
+                        userId = object.getString("id");
+                        profilePicture = new URL("https://graph.facebook.com/" + userId + "/picture?width=500&height=500");
+                        if (object.has("first_name"))
+                            firstName = object.getString("first_name");
+                        if (object.has("last_name"))
+                            lastName = object.getString("last_name");
+                        if (object.has("email"))
+                            email = object.getString("email");
+                        if (object.has("birthday"))
+                            birthday = object.getString("birthday");
+                        if (object.has("gender"))
+                            gender = object.getString("gender");
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    } catch (MalformedURLException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+
+            Bundle parameters = new Bundle();
+            parameters.putString("fields", "id, first_name, last_name, email, birthday, gender");
+            request.setParameters(parameters);
+            request.executeAsync();
+        }
+
+        @Override
+        public void onCancel() {
+
+        }
+
+        @Override
+        public void onError(FacebookException error) {
+            error.printStackTrace();
+        }
+    };
+
 
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
