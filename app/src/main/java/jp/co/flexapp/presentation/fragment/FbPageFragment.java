@@ -1,43 +1,19 @@
 package jp.co.flexapp.presentation.fragment;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
-import com.facebook.AccessTokenTracker;
-import com.facebook.CallbackManager;
-import com.facebook.FacebookCallback;
-import com.facebook.FacebookException;
 import com.facebook.FacebookSdk;
-import com.facebook.GraphRequest;
-import com.facebook.GraphResponse;
-import com.facebook.ProfileTracker;
-import com.facebook.login.LoginResult;
-import com.facebook.login.widget.LoginButton;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.net.MalformedURLException;
-import java.net.URL;
 
 import jp.co.flexapp.R;
+import jp.co.flexapp.presentation.activity.FbOAuthActivity;
 
 public class FbPageFragment extends BasePageFragment {
-
-    private CallbackManager callbackManager;
-    private AccessTokenTracker accessTokenTracker;
-    private ProfileTracker profileTracker;
-    private LoginButton loginButton;
-    private String firstName, lastName, email, birthday, gender;
-    private URL profilePicture;
-    private String userId;
-    private String TAG = "LoginActivity";
 
     private OnFragmentInteractionListener mListener;
 
@@ -52,7 +28,21 @@ public class FbPageFragment extends BasePageFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        FacebookSdk.sdkInitialize(this.getActivity());
+//キーハッシュ確認用
+//        try {
+//            PackageInfo info = getActivity().getPackageManager().getPackageInfo(
+//                    "jp.co.flexapp",
+//                    PackageManager.GET_SIGNATURES);
+//            for (android.content.pm.Signature signature : info.signatures) {
+//                MessageDigest md = MessageDigest.getInstance("SHA");
+//                md.update(signature.toByteArray());
+//                Log.d("KeyHash:", Base64.encodeToString(md.digest(), Base64.DEFAULT));
+//            }
+//        } catch (PackageManager.NameNotFoundException e) {
+//
+//        } catch (NoSuchAlgorithmException e) {
+//
+//        }
     }
 
     @Override
@@ -60,70 +50,13 @@ public class FbPageFragment extends BasePageFragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_fb_page, container, false);
-        callbackManager = CallbackManager.Factory.create();
-        loginButton = (LoginButton) view.findViewById(R.id.fb_login_button);
-        loginButtonInitialize();
-        loginButton.setReadPermissions("email", "user_birthday", "user_posts");
-        loginButton.registerCallback(callbackManager, callback);
+        FacebookSdk.sdkInitialize(this.getActivity());
+        Button toLoginBtn = (Button) view.findViewById(R.id.fb_login_btn);
+        toLoginBtn.setOnClickListener(v -> {
+            startActivity(FbOAuthActivity.makeIntent(getActivity()));
+        });
         return view;
     }
-
-    private void loginButtonInitialize() {
-        loginButton.setHeight(100);
-        loginButton.setTextColor(Color.WHITE);
-        loginButton.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null);
-        loginButton.setCompoundDrawablePadding(0);
-    }
-
-    FacebookCallback<LoginResult> callback = new FacebookCallback<LoginResult>() {
-        @Override
-        public void onSuccess(LoginResult loginResult) {
-            GraphRequest request = GraphRequest.newMeRequest(loginResult.getAccessToken(), new GraphRequest.GraphJSONObjectCallback() {
-
-                @Override
-                public void onCompleted(JSONObject object, GraphResponse response) {
-                    Log.e("FB", object.toString());
-                    Log.e("FB", response.toString());
-
-                    try {
-                        userId = object.getString("id");
-                        profilePicture = new URL("https://graph.facebook.com/" + userId + "/picture?width=500&height=500");
-                        if (object.has("first_name"))
-                            firstName = object.getString("first_name");
-                        if (object.has("last_name"))
-                            lastName = object.getString("last_name");
-                        if (object.has("email"))
-                            email = object.getString("email");
-                        if (object.has("birthday"))
-                            birthday = object.getString("birthday");
-                        if (object.has("gender"))
-                            gender = object.getString("gender");
-
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    } catch (MalformedURLException e) {
-                        e.printStackTrace();
-                    }
-                }
-            });
-
-            Bundle parameters = new Bundle();
-            parameters.putString("fields", "id, first_name, last_name, email, birthday, gender");
-            request.setParameters(parameters);
-            request.executeAsync();
-        }
-
-        @Override
-        public void onCancel() {
-
-        }
-
-        @Override
-        public void onError(FacebookException error) {
-            error.printStackTrace();
-        }
-    };
-
 
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {

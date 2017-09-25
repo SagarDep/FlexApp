@@ -11,6 +11,12 @@ android {
             storeFile file(releaseKeyStore)
             storePassword System.getenv("KEYPWD")
         }
+        debugKey {
+            keyAlias 'debugKey'
+            keyPassword 'hogehoge'
+            storeFile file('/Users/mitsuhori_y/AndroidStudioProjects/FlexApp/keystore/debug_keystore.jks')
+            storePassword 'hogehoge'
+        }
     }
     compileSdkVersion 25
     buildToolsVersion "25.0.0"
@@ -27,6 +33,9 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.releaseKey
+        }
+        debug {
+            signingConfig signingConfigs.debugKey
         }
     }
     compileOptions {
