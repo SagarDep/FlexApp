@@ -12,12 +12,10 @@ import com.facebook.login.LoginManager
 import com.facebook.login.LoginResult
 import jp.co.flexapp.R
 import jp.co.flexapp.common.enums.TabType
-import jp.co.flexapp.infla.pref.BasePreferences
 
 class FbOAuthActivity : AppCompatActivity() {
 
     private var callbackManager: CallbackManager? = null
-    private var preference: BasePreferences? = null
 
     internal var callback: FacebookCallback<LoginResult> = object : FacebookCallback<LoginResult> {
         override fun onSuccess(loginResult: LoginResult) {
@@ -39,7 +37,6 @@ class FbOAuthActivity : AppCompatActivity() {
         FacebookSdk.sdkInitialize(this)
         setContentView(R.layout.activity_main)
 
-        preference = BasePreferences(this)
         callbackManager = CallbackManager.Factory.create()
         LoginManager.getInstance().logInWithReadPermissions(this, listOf("public_profile", "email"))
         LoginManager.getInstance().registerCallback(callbackManager, callback)
