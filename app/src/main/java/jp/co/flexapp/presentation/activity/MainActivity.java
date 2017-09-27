@@ -1,5 +1,7 @@
 package jp.co.flexapp.presentation.activity;
 
+import android.arch.persistence.room.Room;
+import android.arch.persistence.room.RoomDatabase;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -13,6 +15,7 @@ import android.support.v7.app.AppCompatActivity;
 import jp.co.flexapp.R;
 import jp.co.flexapp.common.enums.TabType;
 import jp.co.flexapp.common.util.TwitterUtils;
+import jp.co.flexapp.infla.db.FlexDatabase;
 import jp.co.flexapp.presentation.fragment.BasePageFragment;
 import jp.co.flexapp.presentation.fragment.FbPageFragment;
 import jp.co.flexapp.presentation.fragment.InstaPageFragment;
@@ -29,6 +32,8 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        RoomDatabase database = Room.databaseBuilder(getApplicationContext(), FlexDatabase.class, "FLEX_DB").build();
 
         tabLayout = (TabLayout) findViewById(R.id.tabs);
         viewPager = (ViewPager) findViewById(R.id.pager);

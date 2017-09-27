@@ -18,12 +18,12 @@ android {
             storePassword 'hogehoge'
         }
     }
-    compileSdkVersion 25
-    buildToolsVersion "25.0.0"
+    compileSdkVersion 26
+    buildToolsVersion "26.0.1"
     defaultConfig {
         applicationId "jp.co.flexapp"
         minSdkVersion 18
-        targetSdkVersion 25
+        targetSdkVersion 26
         versionCode 5
         versionName "1.5"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -59,11 +59,10 @@ dependencies {
     // retrofit
     // dagger 2
     // Orma
-    compile 'com.android.support:appcompat-v7:25.1.0'
-    compile 'com.android.support:preference-v7:25.1.0'
-    compile 'com.android.support:preference-v14:25.1.0'
-    compile 'com.android.support:design:25.1.0'
-    compile 'com.android.support:percent:25.1.0'
+    compile 'com.android.support:appcompat-v7:26.1.0'
+    compile 'com.android.support:preference-v7:26.1.0'
+    compile 'com.android.support:design:26.1.0'
+    compile 'com.android.support:percent:26.1.0'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     compile 'io.reactivex.rxjava2:rxjava:2.0.1'
     compile 'com.jakewharton:butterknife:8.4.0'
@@ -71,7 +70,6 @@ dependencies {
     compile 'com.squareup.retrofit2:converter-gson:2.1.0'
     compile 'com.google.dagger:dagger:2.8'
     compile 'com.github.gfx.android.orma:orma:4.1.0'
-    compile 'com.android.support:support-v4:25.3.1'
     compile 'org.twitter4j:twitter4j-core:4.0.4'
     testCompile 'junit:junit:4.12'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.4.0'
@@ -82,6 +80,8 @@ dependencies {
     testAnnotationProcessor 'com.google.dagger:dagger-compiler:2.8'
     compile 'com.facebook.android:facebook-android-sdk:4.18.0'
     compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
+    compile 'android.arch.persistence.room:runtime:1.0.0-beta1'
+    annotationProcessor 'android.arch.persistence.room:compiler:1.0.0-beta1'
 }
 repositories {
     mavenCentral()
