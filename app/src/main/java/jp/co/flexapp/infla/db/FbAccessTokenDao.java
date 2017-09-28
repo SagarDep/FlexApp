@@ -1,11 +1,11 @@
-package jp.co.flexapp.infla.db.dao;
+package jp.co.flexapp.infla.db;
 
 import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.Query;
 import android.arch.persistence.room.Update;
 
-import jp.co.flexapp.infla.db.entity.FbAccessToken;
+import jp.co.flexapp.infla.db.FbAccessToken;
 
 /**
  * Created by mitsuhori_y on 2017/09/27.
