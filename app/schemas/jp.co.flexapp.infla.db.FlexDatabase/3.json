@@ -1,22 +1,24 @@
 {
   "formatVersion": 1,
   "database": {
-    "version": 1,
-    "identityHash": "3e58247b25e7cb142545e86f40f0f188",
+    "version": 3,
+    "identityHash": "5b4836509d21e5fa1d5a6a8ba8c6539e",
     "entities": [
       {
         "tableName": "fbAccessToken",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`accessToken` TEXT, `userId` TEXT, PRIMARY KEY(`accessToken`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`accessToken` TEXT NOT NULL, `userId` TEXT, PRIMARY KEY(`accessToken`))",
         "fields": [
           {
             "fieldPath": "accessToken",
             "columnName": "accessToken",
-            "affinity": "TEXT"
+            "affinity": "TEXT",
+            "notNull": true
           },
           {
             "fieldPath": "userId",
             "columnName": "userId",
-            "affinity": "TEXT"
+            "affinity": "TEXT",
+            "notNull": false
           }
         ],
         "primaryKey": {
@@ -31,7 +33,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"3e58247b25e7cb142545e86f40f0f188\")"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"5b4836509d21e5fa1d5a6a8ba8c6539e\")"
     ]
   }
 }

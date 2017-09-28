@@ -7,7 +7,7 @@ import android.arch.persistence.room.RoomDatabase;
  * Created by mitsuhori_y on 2017/09/27.
  */
 
-@Database(entities = {FbAccessToken.class}, version = 1)
+@Database(entities = {FbAccessToken.class}, version = 3)
 public abstract class FlexDatabase extends RoomDatabase {
 
     public abstract FbAccessTokenDao fbAccessTokenDao();
