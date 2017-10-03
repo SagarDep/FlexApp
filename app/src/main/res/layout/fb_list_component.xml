@@ -11,13 +11,13 @@
         android:layout_weight="1"
         android:orientation="horizontal">
 
-        <TextView
+        <!--TextView
             android:id="@+id/fb_username"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_marginLeft="2dp"
             android:layout_weight="1"
-            android:text="" />
+            android:text="" /-->
 
         <TextView
             android:id="@+id/fb_createdAt"
