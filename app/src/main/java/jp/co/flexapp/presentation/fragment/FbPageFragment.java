@@ -3,19 +3,32 @@ package jp.co.flexapp.presentation.fragment;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ProgressBar;
 
 import com.facebook.FacebookSdk;
 
+import io.reactivex.Single;
+import io.reactivex.SingleObserver;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 import jp.co.flexapp.R;
+import jp.co.flexapp.infla.db.FbAccessToken;
+import jp.co.flexapp.presentation.FlexApp;
 import jp.co.flexapp.presentation.activity.FbOAuthActivity;
+
+import static android.view.View.VISIBLE;
 
 public class FbPageFragment extends BasePageFragment {
 
     private OnFragmentInteractionListener mListener;
+    private Button toLoginBtn;
+    private ProgressBar progressBar;
 
     public FbPageFragment() {
     }
@@ -51,9 +64,28 @@ public class FbPageFragment extends BasePageFragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_fb_page, container, false);
         FacebookSdk.sdkInitialize(this.getActivity());
-        Button toLoginBtn = (Button) view.findViewById(R.id.fb_login_btn);
-        toLoginBtn.setOnClickListener(v -> {
-            startActivity(FbOAuthActivity.makeIntent(getActivity()));
+        toLoginBtn = (Button) view.findViewById(R.id.fb_login_btn);
+        progressBar = (ProgressBar) view.findViewById(R.id.fb_progress_bar);
+        Single<FbAccessToken> token = FlexApp.get().getDB().fbAccessTokenDao().getFbToken();
+        token.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new SingleObserver<FbAccessToken>() {
+            @Override
+            public void onSubscribe(Disposable d) {
+            }
+
+            @Override
+            public void onSuccess(FbAccessToken fbAccessToken) {
+                Log.i("TOKEN", fbAccessToken.getAccessToken());
+                progressBar.setVisibility(VISIBLE);
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                Log.e("TOKEN", e.getStackTrace().toString());
+                toLoginBtn.setVisibility(VISIBLE);
+                toLoginBtn.setOnClickListener(v -> {
+                    startActivity(FbOAuthActivity.makeIntent(getActivity()));
+                });
+            }
         });
         return view;
     }

@@ -85,6 +85,10 @@ public class TwitterPageFragment extends BasePageFragment {
         adapter.setTweetList(new ArrayList<Tweet>());
         listView.setAdapter(adapter);
 
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inSampleSize = 2;
+        options.inPurgeable = true;
+
         disposable.add(getTimelineObservable()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -95,7 +99,7 @@ public class TwitterPageFragment extends BasePageFragment {
                         Tweet tweet = new Tweet();
                         tweet.setId((int) tweetResult.getId());
                         tweet.setTweet(tweetResult.getText());
-                        tweet.setUserImage(BitmapFactory.decodeResource(getResources(), R.drawable.sample_thumb));
+                        tweet.setUserImage(BitmapFactory.decodeResource(getResources(), R.drawable.sample_thumb, options));
                         tweet.setUsername(tweetResult.getUser().getName());
                         tweet.setCreatedAt(DateUtils.convert2String(tweetResult.getCreatedAt()));
                         list.add(tweet);
