@@ -17,9 +17,6 @@ public interface FbAccessTokenDao {
     @Query("SELECT * FROM fbAccessToken LIMIT 1")
     Single<FbAccessToken> getFbToken();
 
-    @Query("SELECT * FROM fbAccessToken WHERE userId LIKE :uid")
-    FbAccessToken getFbAccessToken(String uid);
-
     @Insert
     void putFbToken(FbAccessToken token);
 

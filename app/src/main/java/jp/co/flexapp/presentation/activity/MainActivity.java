@@ -30,8 +30,6 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // RoomDatabase database = Room.databaseBuilder(getApplicationContext(), FlexDatabase.class, "FLEX_DB").build();
-
         tabLayout = (TabLayout) findViewById(R.id.tabs);
         viewPager = (ViewPager) findViewById(R.id.pager);
         final String[] pageTitle = {"Twitter", "Facebook", "Instagram"};

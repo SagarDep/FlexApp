@@ -92,7 +92,6 @@ public class FbPageFragment extends BasePageFragment {
         listView.setAdapter(adapter);
 
         Single<FbAccessToken> token = database.fbAccessTokenDao().getFbToken();
-
         token.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new SingleObserver<FbAccessToken>() {
             @Override
             public void onSubscribe(Disposable d) {
