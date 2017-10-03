@@ -40,7 +40,7 @@ public class FbListAdapter extends BaseAdapter {
 
     @Override
     public long getItemId(int i) {
-        return fbMsgList.get(i).getId();
+        return i;
     }
 
     @Override

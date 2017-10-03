@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ListView;
 import android.widget.ProgressBar;
 
 import com.facebook.AccessToken;
@@ -15,16 +16,23 @@ import com.facebook.FacebookSdk;
 import com.facebook.GraphRequest;
 import com.facebook.HttpMethod;
 
+import java.util.ArrayList;
+
 import io.reactivex.Single;
 import io.reactivex.SingleObserver;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 import jp.co.flexapp.R;
+import jp.co.flexapp.common.util.FbJsonGet;
 import jp.co.flexapp.infla.db.FbAccessToken;
+import jp.co.flexapp.infla.entity.FbMsg;
 import jp.co.flexapp.presentation.FlexApp;
 import jp.co.flexapp.presentation.activity.FbOAuthActivity;
+import jp.co.flexapp.presentation.customVIew.FbListAdapter;
 
+import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 
 public class FbPageFragment extends BasePageFragment {
@@ -32,6 +40,9 @@ public class FbPageFragment extends BasePageFragment {
     private OnFragmentInteractionListener mListener;
     private Button toLoginBtn;
     private ProgressBar progressBar;
+    private ListView listView;
+    private FbListAdapter adapter;
+    private CompositeDisposable disposable;
 
     public FbPageFragment() {
     }
@@ -44,6 +55,8 @@ public class FbPageFragment extends BasePageFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        disposable = new CompositeDisposable();
+        adapter = new FbListAdapter(getActivity());
 //キーハッシュ確認用
 //        try {
 //            PackageInfo info = getActivity().getPackageManager().getPackageInfo(
@@ -67,8 +80,14 @@ public class FbPageFragment extends BasePageFragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_fb_page, container, false);
         FacebookSdk.sdkInitialize(this.getActivity());
+
         toLoginBtn = (Button) view.findViewById(R.id.fb_login_btn);
         progressBar = (ProgressBar) view.findViewById(R.id.fb_progress_bar);
+        listView = (ListView) view.findViewById(R.id.fb_list_view);
+
+        adapter.setFbMsgList(new ArrayList<FbMsg>());
+        listView.setAdapter(adapter);
+
         Single<FbAccessToken> token = FlexApp.get().getDB().fbAccessTokenDao().getFbToken();
         token.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new SingleObserver<FbAccessToken>() {
             @Override
@@ -85,7 +104,12 @@ public class FbPageFragment extends BasePageFragment {
                         null,
                         HttpMethod.GET,
                         res -> {
-                            Log.d("res", res.getRawResponse());
+                            ArrayList<FbMsg> list = FbJsonGet.toFbMsg(res.getRawResponse());
+                            adapter.setFbMsgList(list);
+                            adapter.notifyDataSetChanged();
+
+                            listView.setVisibility(VISIBLE);
+                            progressBar.setVisibility(GONE);
                         }).executeAsync();
             }
 

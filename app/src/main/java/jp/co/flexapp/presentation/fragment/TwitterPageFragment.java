@@ -91,6 +91,7 @@ public class TwitterPageFragment extends BasePageFragment {
 
         disposable.add(getTimelineObservable()
                 .subscribeOn(Schedulers.io())
+                .retry(3)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(resList -> {
                     ArrayList<Tweet> list = new ArrayList<>();
@@ -110,6 +111,8 @@ public class TwitterPageFragment extends BasePageFragment {
 
                     listView.setVisibility(View.VISIBLE);
                     progressBar.setVisibility(GONE);
+                }, err -> {
+                    err.printStackTrace();
                 }));
 
 

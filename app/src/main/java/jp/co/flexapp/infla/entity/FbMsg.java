@@ -14,7 +14,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class FbMsg {
-    int id;
+    String id;
     String message;
     String createdAt;
 }
