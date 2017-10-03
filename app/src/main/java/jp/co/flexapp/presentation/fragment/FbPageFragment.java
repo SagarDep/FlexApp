@@ -10,7 +10,10 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ProgressBar;
 
+import com.facebook.AccessToken;
 import com.facebook.FacebookSdk;
+import com.facebook.GraphRequest;
+import com.facebook.HttpMethod;
 
 import io.reactivex.Single;
 import io.reactivex.SingleObserver;
@@ -76,6 +79,14 @@ public class FbPageFragment extends BasePageFragment {
             public void onSuccess(FbAccessToken fbAccessToken) {
                 Log.i("TOKEN", fbAccessToken.getAccessToken());
                 progressBar.setVisibility(VISIBLE);
+
+                new GraphRequest(getAccessToken(fbAccessToken),
+                        "me/feed",
+                        null,
+                        HttpMethod.GET,
+                        res -> {
+                            Log.d("res", res.getRawResponse());
+                        }).executeAsync();
             }
 
             @Override
@@ -88,6 +99,11 @@ public class FbPageFragment extends BasePageFragment {
             }
         });
         return view;
+    }
+
+    private AccessToken getAccessToken(FbAccessToken fbAccessToken) {
+        return new AccessToken
+                (fbAccessToken.getAccessToken(), getString(R.string.facebook_app_id), fbAccessToken.getUserId(), null, null, null, null, null);
     }
 
     // TODO: Rename method, update argument and hook method into UI event
