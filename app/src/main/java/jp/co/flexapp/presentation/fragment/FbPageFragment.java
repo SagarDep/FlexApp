@@ -27,6 +27,7 @@ import io.reactivex.schedulers.Schedulers;
 import jp.co.flexapp.R;
 import jp.co.flexapp.common.util.FbJsonGet;
 import jp.co.flexapp.infla.db.FbAccessToken;
+import jp.co.flexapp.infla.db.FlexDatabase;
 import jp.co.flexapp.infla.entity.FbMsg;
 import jp.co.flexapp.presentation.FlexApp;
 import jp.co.flexapp.presentation.activity.FbOAuthActivity;
@@ -43,6 +44,7 @@ public class FbPageFragment extends BasePageFragment {
     private ListView listView;
     private FbListAdapter adapter;
     private CompositeDisposable disposable;
+    private FlexDatabase database;
 
     public FbPageFragment() {
     }
@@ -57,6 +59,7 @@ public class FbPageFragment extends BasePageFragment {
         super.onCreate(savedInstanceState);
         disposable = new CompositeDisposable();
         adapter = new FbListAdapter(getActivity());
+        database = FlexApp.get().getDB();
 //キーハッシュ確認用
 //        try {
 //            PackageInfo info = getActivity().getPackageManager().getPackageInfo(
@@ -88,7 +91,8 @@ public class FbPageFragment extends BasePageFragment {
         adapter.setFbMsgList(new ArrayList<FbMsg>());
         listView.setAdapter(adapter);
 
-        Single<FbAccessToken> token = FlexApp.get().getDB().fbAccessTokenDao().getFbToken();
+        Single<FbAccessToken> token = database.fbAccessTokenDao().getFbToken();
+
         token.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new SingleObserver<FbAccessToken>() {
             @Override
             public void onSubscribe(Disposable d) {
