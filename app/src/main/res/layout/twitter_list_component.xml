@@ -38,7 +38,9 @@
                 android:layout_height="0dp"
                 android:layout_marginLeft="2dp"
                 android:layout_weight="5"
-                android:text="" />
+                android:text=""
+                android:textColor="@color/cardview_light_background"
+                android:textSize="16dp" />
 
             <TextView
                 android:id="@+id/twitter_createdAt"
@@ -48,6 +50,7 @@
                 android:layout_weight="1"
                 android:gravity="right|bottom"
                 android:text=""
+                android:textColor="@color/cardview_light_background"
                 android:textSize="10dp" />
 
         </LinearLayout>
@@ -62,6 +65,7 @@
         android:layout_marginLeft="5dp"
         android:layout_marginRight="5dp"
         android:layout_weight="4"
-        android:text="" />
+        android:text=""
+        android:textColor="@color/cardview_light_background" />
 
 </LinearLayout>
